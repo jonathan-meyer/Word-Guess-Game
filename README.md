@@ -1,2 +1,2 @@
 # Word-Guess-Game
-Guest the word game. 
+Guess the word game. 
