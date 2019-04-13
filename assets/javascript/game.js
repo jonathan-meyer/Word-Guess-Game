@@ -1,9 +1,5 @@
-function isLetter(char) {
-  return char.length == 1 && new RegExp("[a-zA-Z]").test(char);
-}
-
-function isWhiteSpace(char) {
-  return char.length == 1 && new RegExp("\\s").test(char);
+function isValidGuess(char) {
+  return char.length == 1 && new RegExp("[a-zA-Z0-9]").test(char);
 }
 
 (function($) {
@@ -49,31 +45,52 @@ function isWhiteSpace(char) {
       this.element.show();
     },
 
-    guess: function(letter) {
-      console.log("guess: ", letter);
+    guess: function(guess) {
+      console.log("guess: ", guess);
 
-      if (this.guesses.length < this.maxGuesses) {
-        if (!this.guesses.includes(letter)) {
-          if (Object.keys(this.letters).includes(letter.toLowerCase())) {
-            $.each(this.letters[letter.toLowerCase()], function() {
-              $(this).letter("reveal");
-            });
-          } else {
-            this.guesses.push(letter);
+      if (guess.length == 1) {
+        if (isValidGuess(guess)) {
+          if (this.guesses.length < this.maxGuesses) {
+            if (!this.guesses.includes(guess)) {
+              if (Object.keys(this.letters).includes(guess.toLowerCase())) {
+                $.each(this.letters[guess.toLowerCase()], function() {
+                  $(this).letter("reveal");
+                });
+              } else {
+                this.guesses.push(guess);
+              }
+            }
           }
+        } else {
+          this._alert("[" + guess + "] is not a valid guess.");
         }
       }
 
+      this._update();
+
       if (this.guesses.length >= this.maxGuesses) {
-        alert("The word was: " + this.word);
-        this.start();
-      } else {
-        this._update();
+        this._alert(
+          "The word was: " + this.word,
+          function() {
+            this.start();
+          }.bind(this)
+        );
       }
     },
 
     _pickWord: function() {
       return this.options.words[Math.round((Math.random() * 100) % this.options.words.length)];
+    },
+
+    _alert: function(message, cb) {
+      $("#alertMessage").text(message);
+      $("#alertModal")
+        .on("hidden.bs.modal", function(e) {
+          if (typeof cb === "function") {
+            cb();
+          }
+        })
+        .modal({ backdrop: false });
     },
 
     _create: function() {
@@ -104,6 +121,36 @@ function isWhiteSpace(char) {
         $("<div>")
           .text("Guesses Remaining: ")
           .append(this.guessesRemainingEl)
+      );
+
+      this.element.append(
+        $("<div>")
+          .addClass("modal fade")
+          .attr({ id: "alertModal", role: "dialog", tabindex: -1 })
+          .append(
+            $("<div>")
+              .addClass("modal-dialog")
+              .attr("role", "document")
+              .append(
+                $("<div>")
+                  .addClass("modal-content")
+                  .append(
+                    $("<h5>")
+                      .addClass("modal-body")
+                      .attr("id", "alertMessage")
+                  )
+                  .append(
+                    $("<div>")
+                      .addClass("modal-footer")
+                      .append(
+                        $("<button>")
+                          .addClass("btn btn-primary")
+                          .attr({ type: "button", "data-dismiss": "modal" })
+                          .text("Close")
+                      )
+                  )
+              )
+          )
       );
 
       this.element.addClass("game");

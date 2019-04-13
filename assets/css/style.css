@@ -1,5 +1,10 @@
 body {
-  background-color: #e9ecef;
+  background-color: black;
+  background-image: url("/assets/images/death-star.jpg");
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-position: center;
+  background-size: cover;
 }
 
 .data {
@@ -11,6 +16,7 @@ body {
 .word {
   display: flex;
   justify-content: center;
+  background-color: #7b8894;
 }
 
 .letter {
@@ -21,19 +27,19 @@ body {
   height: 50px;
   font-family: "Courier New", Courier, monospace;
   font-weight: bold;
+  font-size: 2em;
   margin: 5px 0;
 }
 
-.letter-hidden {
-  /* border: 1px solid black; */
-  background-color: antiquewhite;
-}
-
-.letter-revealed {
-  /* border: 1px solid green; */
-  background-color: inherit;
-}
-
 .guesses {
-  color: red;
+  color: rgb(253, 108, 108);
+}
+
+.card {
+  opacity: 0.75;
+}
+
+.modal {
+  opacity: 1;
+  color: black;
 }
