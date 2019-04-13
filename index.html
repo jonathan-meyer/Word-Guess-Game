@@ -11,11 +11,7 @@
       crossorigin="anonymous"
     />
     <link rel="stylesheet" href="assets/css/style.css" />
-    <script
-      src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-      integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-      crossorigin="anonymous"
-    ></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
     <script
       src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
       integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
@@ -26,30 +22,64 @@
       integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
       crossorigin="anonymous"
     ></script>
+    <script
+      src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"
+      integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU="
+      crossorigin="anonymous"
+    ></script>
+    <script src="assets/javascript/letter.js"></script>
     <script src="assets/javascript/game.js"></script>
+    <script>
+      $(function() {
+        $("#game").game({
+          words: [
+            "Skywalker",
+            "C3PO",
+            "R2D2",
+            "DarthVader",
+            "Leia",
+            "ObiWan",
+            "Alderaan",
+            "YavinIV",
+            "Hoth",
+            "Dagobah",
+            "Bespin",
+            "Endor",
+            "Naboo",
+            "Coruscant",
+            "Kamino",
+            "Geonosis"
+          ]
+        });
+
+        $(":root").keyup(function(e) {
+          if ($("#game").is(":visible")) {
+            if (isLetter(e.key)) {
+              $("#game").game("guess", e.key);
+            }
+          } else {
+            $("#splash").hide();
+            $("#game").game("start");
+          }
+        });
+      });
+    </script>
   </head>
   <body>
     <div class="container p-5">
       <div class="card">
         <div class="card-header">
-          <h1>Star[*] WordGuess</h1>
+          <h1>StarWord Guess</h1>
         </div>
-        <div id="splash" class="card-body">
-          <h5 class="card-title">Press any key to get started!</h1>
-        </div>
-
-        <div id="game" class="card-body">
-          <h5 class="card-title">Lorem ipsum dolor sit amet.</h5>
-          <p class="card-text">
-            <div class="container">
-              <div class="row">
-                <div class="col-12">
-                </div>
-              </div>
+        <div class="card-body">
+          <div class="card-text">
+            <div id="splash">
+              <h5>Press any key to get started!</h5>
             </div>
-          </p>
+            <div id="game"></div>
+          </div>
         </div>
       </div>
     </div>
-  </body> 
+  </body>
 </html>
