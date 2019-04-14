@@ -23,7 +23,7 @@ function isValidGuess(char) {
       this.guesses = [];
       this.gameOver = false;
 
-      console.log("start: " + this.word);
+      // console.log("start: " + this.word);
 
       this.wordEl.empty();
 
@@ -47,7 +47,7 @@ function isValidGuess(char) {
     },
 
     guess: function(guess) {
-      console.log("guess: ", guess);
+      // console.log("guess: ", guess);
 
       if (!this.gameOver) {
         if (guess.length == 1) {
