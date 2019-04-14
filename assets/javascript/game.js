@@ -21,6 +21,7 @@ function isValidGuess(char) {
       this.maxGuesses = this.word.length * 2;
       this.letters = {};
       this.guesses = [];
+      this.gameOver = false;
 
       console.log("start: " + this.word);
 
@@ -48,9 +49,10 @@ function isValidGuess(char) {
     guess: function(guess) {
       console.log("guess: ", guess);
 
-      if (guess.length == 1) {
-        if (isValidGuess(guess)) {
-          if (this.guesses.length < this.maxGuesses) {
+      if (!this.gameOver) {
+        if (guess.length == 1) {
+          if (isValidGuess(guess)) {
+            // process guess
             if (!this.guesses.includes(guess)) {
               if (Object.keys(this.letters).includes(guess.toLowerCase())) {
                 $.each(this.letters[guess.toLowerCase()], function() {
@@ -60,21 +62,44 @@ function isValidGuess(char) {
                 this.guesses.push(guess);
               }
             }
+
+            // update display
+            this._update();
+          } else {
+            alert("[" + guess + "] is not a valid guess.");
           }
-        } else {
-          this._alert("[" + guess + "] is not a valid guess.");
         }
-      }
 
-      this._update();
+        // check if all letters revealed
+        var x = 0;
 
-      if (this.guesses.length >= this.maxGuesses) {
-        this._alert(
-          "The word was: " + this.word,
-          function() {
-            this.start();
-          }.bind(this)
-        );
+        $.each(Object.values(this.letters), function() {
+          $.each(this, function() {
+            x += $(this).letter("isRevealed") ? 1 : -1;
+          });
+        });
+
+        if (x == this.word.length) {
+          this.gameOver = true;
+          this._alert(
+            "You Got It!!",
+            function() {
+              this.wins++;
+              this.start();
+            }.bind(this)
+          );
+        }
+
+        // check if too many guesses
+        if (this.guesses.length >= this.maxGuesses) {
+          this.gameOver = true;
+          this._alert(
+            "The word was: " + this.word,
+            function() {
+              this.start();
+            }.bind(this)
+          );
+        }
       }
     },
 
@@ -85,6 +110,11 @@ function isValidGuess(char) {
     _alert: function(message, cb) {
       $("#alertMessage").text(message);
       $("#alertModal")
+        .on("shown.bs.modal", function() {
+          $("#alertModal")
+            .find("button")
+            .focus();
+        })
         .on("hidden.bs.modal", function(e) {
           if (typeof cb === "function") {
             cb();
@@ -159,6 +189,7 @@ function isValidGuess(char) {
     },
 
     _update: function() {
+      // update elements
       this.winsEl.text(this.wins);
       this.guessesEl.text(this.guesses.map(l => l.toUpperCase()).join(" "));
       this.guessesRemainingEl.text(this.maxGuesses - this.guesses.length);

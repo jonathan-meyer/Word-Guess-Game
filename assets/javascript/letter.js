@@ -20,6 +20,10 @@
       this._update();
     },
 
+    isRevealed: function() {
+      return this.options.revealed;
+    },
+
     _create: function() {
       this.element.addClass("letter");
       this._update();
