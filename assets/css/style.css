@@ -1,6 +1,6 @@
 body {
   background-color: black;
-  background-image: url("/assets/images/death-star.jpg");
+  background-image: url("../images/death-star.jpg");
   background-repeat: no-repeat;
   background-attachment: fixed;
   background-position: center;
